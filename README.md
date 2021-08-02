@@ -75,7 +75,7 @@ Você só deve alterar os arquivos indicados nos requisitos. **Os arquivos que n
 
   - Projeto individual;
 
-  - Serão 2 dias de projeto;
+  - Serão `2` dias de projeto;
 
   - Data de entrega para avaliação final do projeto: `16/08/2021 - 14:00h`
 
