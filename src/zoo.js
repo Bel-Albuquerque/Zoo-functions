@@ -14,8 +14,15 @@ function getSpeciesByIds(...ids) {
   return array;
 }
 
+// tentei usar o find e n consegui, refatorar!!!
 function getAnimalsOlderThan(animal, age) {
-  // seu código aqui
+  let residentes;
+  especies.forEach((objeto) => {
+    if (objeto.name === animal) {
+      residentes = objeto.residents;
+    }
+  });
+  return residentes.every((cadaResidente) => cadaResidente.age >= age);
 }
 
 function getEmployeeByName(employeeName) {
