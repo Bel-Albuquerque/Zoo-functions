@@ -76,16 +76,41 @@ function countAnimals(par1 = 0) {
   return objResp;
 }
 
-function calculateEntry(entrants) {
-  // seu código aqui
+function calculateEntry(entrants = 0) {
+  const adulto = (entrants.Adult) ? entrants.Adult * 49.99 : 0;
+  const idoso = (entrants.Senior) ? entrants.Senior * 24.99 : 0;
+  const criança = (entrants.Child) ? entrants.Child * 20.99 : 0;
+
+  return (entrants === 0) ? 0 : adulto + idoso + criança;
 }
 
 function getAnimalMap(options) {
   // seu código aqui
 }
+const { hours } = data;
 
-function getSchedule(dayName) {
-  // seu código aqui
+const { Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday } = hours;
+
+const arrayDestruc = [Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday];
+
+const arrayDiasSemana = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+function getSchedule(parametro = 0) {
+  const resposta = {};
+  arrayDiasSemana.forEach((valor, index) => {
+    const temp = Object.values(arrayDestruc[index]);
+    if (temp[1] > 12) {
+      const temp2 = temp[1];
+      temp[1] = 12 - (24 - temp2);
+    }
+    resposta[valor] = (`Open from ${temp[0]}am until ${temp[1]}pm`);
+  });
+  resposta.Monday = 'CLOSED';
+
+  if (parametro !== 0) {
+    return { [parametro]: resposta[parametro] };
+  }
+  return resposta;
 }
 
 function getOldestFromFirstSpecies(id) {
