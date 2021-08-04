@@ -63,8 +63,17 @@ function addEmployee(id, firstName, lastName, managers = 0, respFor = 0) {
   employees.push(obj);
 }
 
-function countAnimals(species) {
-  // seu código aqui
+function countAnimals(par1 = 0) {
+  const objResp = {};
+  especies.forEach((obj) => {
+    const nome = obj.name;
+    const quantidade = obj.residents.length;
+    objResp[nome] = quantidade;
+  });
+  if (par1 !== 0) {
+    return objResp[par1];
+  }
+  return objResp;
 }
 
 function calculateEntry(entrants) {
