@@ -1,6 +1,7 @@
 const data = require('./data');
 
 const especies = data.species;
+const { employees } = data;
 
 function getSpeciesByIds(...ids) {
   const array = [];
@@ -14,7 +15,6 @@ function getSpeciesByIds(...ids) {
   return array;
 }
 
-// tentei usar o find e n consegui, refatorar!!!
 function getAnimalsOlderThan(animal, age) {
   let residentes;
   especies.forEach((objeto) => {
@@ -26,7 +26,13 @@ function getAnimalsOlderThan(animal, age) {
 }
 
 function getEmployeeByName(employeeName) {
-  // seu código aqui
+  let objetoResposta = {};
+  employees.forEach((objeto) => {
+    if (objeto.firstName === employeeName || objeto.lastName === employeeName) {
+      objetoResposta = objeto;
+    }
+  });
+  return objetoResposta;
 }
 
 function createEmployee(personalInfo, associatedWith) {
