@@ -1,4 +1,5 @@
 const data = require('./data');
+const especies = data.species
 
 function getSpeciesByIds(ids) {
   // seu código aqui
