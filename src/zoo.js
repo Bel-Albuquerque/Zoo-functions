@@ -85,9 +85,69 @@ function calculateEntry(entrants = 0) {
   return (entrants === 0) ? 0 : adulto + idoso + criança;
 }
 
-function getAnimalMap(options) {
-  // seu código aqui
+// --------------------
+// ______________________
+
+const superObjeto = {};
+
+function base(callback, string, sex = undefined, sort = undefined) {
+  superObjeto[string] = especies.reduce(((acu, valor) => {
+    if (valor.location === string) {
+      callback(acu, valor, sex, sort);
+    }
+    return acu;
+  }), []);
 }
+
+const concatGeraRegi = (acu, valor) => acu.push(valor.name);
+
+const condiSex = (a, v, sex) => {
+  if (v.sex === sex) {
+    return a.push(v.name);
+  }
+};
+
+const concatNames = (acu, valor, sex, sort = undefined) => {
+  const temp = {};
+  temp[valor.name] = valor.residents.reduce(((a, v) => {
+    if (sex !== undefined) {
+      condiSex(a, v, sex);
+    } else {
+      a.push(v.name);
+    }
+    return a;
+  }), []);
+  if (sort !== undefined) {
+    temp[valor.name].sort();
+  }
+  return acu.push(temp);
+};
+
+const gerarRegioes = (string) => base(concatGeraRegi, string);
+
+const fififonfon = (string, sex, sort) => base(concatNames, string, sex, sort);
+
+function multiplica4(callback, sex, sort) {
+  callback('NE', sex, sort);
+  callback('NW', sex, sort);
+  callback('SE', sex, sort);
+  callback('SW', sex, sort);
+}
+
+function getAnimalMap(options = 0) {
+  if (options === 0) {
+    multiplica4(gerarRegioes);
+    return superObjeto;
+  }
+
+  if (options.includeNames === true) {
+    multiplica4(fififonfon, options.sex, options.sorted);
+    return superObjeto;
+  }
+  multiplica4(gerarRegioes);
+  return superObjeto;
+}
+
 const { hours } = data;
 
 const { Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday } = hours;
