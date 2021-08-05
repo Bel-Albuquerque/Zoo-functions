@@ -208,36 +208,39 @@ const transformarIdemAnimal = (idAnimal) => {
   return nomeDoAnimal;
 };
 
-const array = {};
-
 const proLintFicarFeliz = (obj) => {
   const nomeCompleto = `${obj.firstName} ${obj.lastName}`;
   const arrayAnimais = [];
   obj.responsibleFor.forEach((idAnimal) => {
     arrayAnimais.push(transformarIdemAnimal(idAnimal));
   });
-  array[nomeCompleto] = arrayAnimais;
-  return array;
+  const temp = {};
+  temp[nomeCompleto] = arrayAnimais;
+  return temp;
 };
 
 function getEmployeeCoverage(idOrName = 0) {
+  let array = {};
   if (idOrName === 0) {
     employees.forEach((obj) => {
-      proLintFicarFeliz(obj);
+      array = { ...array, ...proLintFicarFeliz(obj) };
     });
     return array;
   }
   employees.forEach((obj) => {
     if (obj.firstName === idOrName || obj.lastName === idOrName || obj.id === idOrName) {
-      proLintFicarFeliz(obj);
+      array = { ...array, ...proLintFicarFeliz(obj) };
     }
   });
   return array;
 }
 
+console.log(getEmployeeCoverage());
+console.log('-------------meu resultado---------------');
+console.log(getEmployeeCoverage('Stephanie'));
 console.log('-----------------------------------------');
-console.log(getEmployeeCoverage('4b40a139-d4dc-4f09-822d-ec25e819a5ad'));
-console.log({ 'Sharonda Spry': ['otters', 'frogs'] });
+console.log('-------------resultado esperado---------------');
+console.log({ 'Stephanie Strauss': ['giraffes', 'otters'] });
 console.log('-----------------------------------------');
 
 module.exports = {
