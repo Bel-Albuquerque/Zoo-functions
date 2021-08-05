@@ -90,14 +90,14 @@ function calculateEntry(entrants = 0) {
 
 const superObjeto = {};
 
-function base(callback, string, sex = undefined, sort = undefined) {
+const base = (callback, string, sex = undefined, sort = undefined) => {
   superObjeto[string] = especies.reduce(((acu, valor) => {
     if (valor.location === string) {
       callback(acu, valor, sex, sort);
     }
     return acu;
   }), []);
-}
+};
 
 const concatGeraRegi = (acu, valor) => acu.push(valor.name);
 
@@ -127,12 +127,12 @@ const gerarRegioes = (string) => base(concatGeraRegi, string);
 
 const fififonfon = (string, sex, sort) => base(concatNames, string, sex, sort);
 
-function multiplica4(callback, sex, sort) {
+const multiplica4 = (callback, sex, sort) => {
   callback('NE', sex, sort);
   callback('NW', sex, sort);
   callback('SE', sex, sort);
   callback('SW', sex, sort);
-}
+};
 
 function getAnimalMap(options = 0) {
   if (options === 0) {
@@ -198,9 +198,47 @@ function increasePrices(valor = 0) {
   prices.Senior = Math.round(precoIdoso * 100) / 100;
 }
 
-function getEmployeeCoverage(idOrName) {
-  // seu código aqui
+const transformarIdemAnimal = (idAnimal) => {
+  let nomeDoAnimal;
+  especies.forEach((obj) => {
+    if (obj.id === idAnimal) {
+      nomeDoAnimal = obj.name;
+    }
+  });
+  return nomeDoAnimal;
+};
+
+const array = {};
+
+const proLintFicarFeliz = (obj) => {
+  const nomeCompleto = `${obj.firstName} ${obj.lastName}`;
+  const arrayAnimais = [];
+  obj.responsibleFor.forEach((idAnimal) => {
+    arrayAnimais.push(transformarIdemAnimal(idAnimal));
+  });
+  array[nomeCompleto] = arrayAnimais;
+  return array;
+};
+
+function getEmployeeCoverage(idOrName = 0) {
+  if (idOrName === 0) {
+    employees.forEach((obj) => {
+      proLintFicarFeliz(obj);
+    });
+    return array;
+  }
+  employees.forEach((obj) => {
+    if (obj.firstName === idOrName || obj.lastName === idOrName || obj.id === idOrName) {
+      proLintFicarFeliz(obj);
+    }
+  });
+  return array;
 }
+
+console.log('-----------------------------------------');
+console.log(getEmployeeCoverage('4b40a139-d4dc-4f09-822d-ec25e819a5ad'));
+console.log({ 'Sharonda Spry': ['otters', 'frogs'] });
+console.log('-----------------------------------------');
 
 module.exports = {
   calculateEntry,
