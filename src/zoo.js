@@ -4,6 +4,8 @@ const data = require('./data');
 const especies = data.species;
 const { employees } = data;
 
+// -----requisito1--------
+
 function getSpeciesByIds(...ids) {
   const array = [];
   ids.forEach((umId) => {
@@ -16,6 +18,8 @@ function getSpeciesByIds(...ids) {
   return array;
 }
 
+// -----requisito2--------
+
 function getAnimalsOlderThan(animal, age) {
   let residentes;
   especies.forEach((objeto) => {
@@ -25,6 +29,8 @@ function getAnimalsOlderThan(animal, age) {
   });
   return residentes.every((cadaResidente) => cadaResidente.age >= age);
 }
+
+// -----requisito3--------
 
 function getEmployeeByName(employeeName) {
   let objetoResposta = {};
@@ -36,10 +42,14 @@ function getEmployeeByName(employeeName) {
   return objetoResposta;
 }
 
+// -----requisito4--------
+
 function createEmployee(personalInfo, associatedWith) {
   const objeto = Object.assign(personalInfo, associatedWith);
   return objeto;
 }
+
+// -----requisito5--------
 
 function isManager(id) {
   let pessoa = false;
@@ -53,6 +63,8 @@ function isManager(id) {
   return pessoa;
 }
 
+// -----requisito6--------
+
 function addEmployee(id, firstName, lastName, managers = 0, respFor = 0) {
   const obj = {
     id,
@@ -63,6 +75,7 @@ function addEmployee(id, firstName, lastName, managers = 0, respFor = 0) {
   obj.responsibleFor = (respFor === 0) ? obj.responsibleFor = [] : obj.responsibleFor = respFor;
   employees.push(obj);
 }
+// -----requisito7--------
 
 function countAnimals(par1 = 0) {
   const objResp = {};
@@ -76,6 +89,7 @@ function countAnimals(par1 = 0) {
   }
   return objResp;
 }
+// -----requisito8--------
 
 function calculateEntry(entrants = 0) {
   const adulto = (entrants.Adult) ? entrants.Adult * 49.99 : 0;
@@ -85,8 +99,7 @@ function calculateEntry(entrants = 0) {
   return (entrants === 0) ? 0 : adulto + idoso + criança;
 }
 
-// --------------------
-// ______________________
+// -----requisito9--------
 
 const superObjeto = {};
 
@@ -148,6 +161,8 @@ function getAnimalMap(options = 0) {
   return superObjeto;
 }
 
+// -----requisito10--------
+
 const { hours } = data;
 
 const { Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday } = hours;
@@ -174,6 +189,8 @@ function getSchedule(parametro = 0) {
   return resposta;
 }
 
+// -----requisito11--------
+
 function getOldestFromFirstSpecies(id) {
   const objFuncionario = employees.find((obj) => obj.id === id);
   const primeiroAnimal = objFuncionario.responsibleFor[0];
@@ -188,6 +205,8 @@ function getOldestFromFirstSpecies(id) {
   return Object.values(resposta);
 }
 
+// -----requisito12--------
+
 function increasePrices(valor = 0) {
   const { Adult, Child, Senior } = prices;
   const precoAdulto = Adult * (valor / 100 + 1);
@@ -197,6 +216,8 @@ function increasePrices(valor = 0) {
   prices.Child = Math.round(precoCrianca * 100) / 100;
   prices.Senior = Math.round(precoIdoso * 100) / 100;
 }
+
+// -----requisito13--------
 
 const transformarIdemAnimal = (idAnimal) => {
   let nomeDoAnimal;
@@ -234,14 +255,6 @@ function getEmployeeCoverage(idOrName = 0) {
   });
   return array;
 }
-
-console.log(getEmployeeCoverage());
-console.log('-------------meu resultado---------------');
-console.log(getEmployeeCoverage('Stephanie'));
-console.log('-----------------------------------------');
-console.log('-------------resultado esperado---------------');
-console.log({ 'Stephanie Strauss': ['giraffes', 'otters'] });
-console.log('-----------------------------------------');
 
 module.exports = {
   calculateEntry,
