@@ -7,39 +7,21 @@ const { employees } = data;
 // -----requisito1--------
 
 function getSpeciesByIds(...ids) {
-  const array = [];
-  ids.forEach((umId) => {
-    especies.forEach((objeto) => {
-      if (objeto.id === umId) {
-        array.push(objeto);
-      }
-    });
-  });
-  return array;
+  return especies.filter((objeto) => ids.includes(objeto.id));
 }
 
 // -----requisito2--------
 
 function getAnimalsOlderThan(animal, age) {
-  let residentes;
-  especies.forEach((objeto) => {
-    if (objeto.name === animal) {
-      residentes = objeto.residents;
-    }
-  });
-  return residentes.every((cadaResidente) => cadaResidente.age >= age);
+  const obj = especies.find((objeto) => objeto.name === animal);
+  return obj.residents.every((cadaResidente) => cadaResidente.age >= age);
 }
 
 // -----requisito3--------
 
-function getEmployeeByName(employeeName) {
-  let objetoResposta = {};
-  employees.forEach((objeto) => {
-    if (objeto.firstName === employeeName || objeto.lastName === employeeName) {
-      objetoResposta = objeto;
-    }
-  });
-  return objetoResposta;
+function getEmployeeByName(employeeName = 0) {
+  const resp = employees.find((o) => o.firstName === employeeName || o.lastName === employeeName);
+  return (employeeName === 0) ? {} : resp;
 }
 
 // -----requisito4--------
@@ -52,112 +34,79 @@ function createEmployee(personalInfo, associatedWith) {
 // -----requisito5--------
 
 function isManager(id) {
-  let pessoa = false;
-  employees.forEach((objeto) => {
-    objeto.managers.forEach((manager) => {
-      if (manager === id) {
-        pessoa = true;
-      }
-    });
-  });
-  return pessoa;
+  return employees.some((objeto) => objeto.managers.includes(id));
 }
 
 // -----requisito6--------
 
-function addEmployee(id, firstName, lastName, managers = 0, respFor = 0) {
+function addEmployee(id, firstName, lastName, manager = [], responsFor = []) {
   const obj = {
     id,
     firstName,
     lastName,
+    managers: manager,
+    responsibleFor: responsFor,
   };
-  obj.managers = (managers === 0) ? obj.managers = [] : obj.managers = managers;
-  obj.responsibleFor = (respFor === 0) ? obj.responsibleFor = [] : obj.responsibleFor = respFor;
-  employees.push(obj);
+  return employees.push(obj);
 }
 // -----requisito7--------
 
 function countAnimals(par1 = 0) {
-  const objResp = {};
+  const resp = {};
   especies.forEach((obj) => {
-    const nome = obj.name;
-    const quantidade = obj.residents.length;
-    objResp[nome] = quantidade;
+    resp[obj.name] = obj.residents.length;
   });
-  if (par1 !== 0) {
-    return objResp[par1];
-  }
-  return objResp;
+  return (par1 !== 0) ? resp[par1] : resp;
 }
+
 // -----requisito8--------
 
-function calculateEntry(entrants = 0) {
-  const adulto = (entrants.Adult) ? entrants.Adult * 49.99 : 0;
-  const idoso = (entrants.Senior) ? entrants.Senior * 24.99 : 0;
-  const criança = (entrants.Child) ? entrants.Child * 20.99 : 0;
-
-  return (entrants === 0) ? 0 : adulto + idoso + criança;
+function calculateEntry({ Adult = 0, Senior = 0, Child = 0 } = 0) {
+  return Adult * 49.99 + Senior * 24.99 + Child * 20.99;
 }
 
 // -----requisito9--------
 
 const superObjeto = {};
 
-const base = (callback, string, sex = undefined, sort = undefined) => {
-  superObjeto[string] = especies.reduce(((acu, valor) => {
-    if (valor.location === string) {
-      callback(acu, valor, sex, sort);
-    }
-    return acu;
-  }), []);
-};
-
-const concatGeraRegi = (acu, valor) => acu.push(valor.name);
-
-const condiSex = (a, v, sex) => {
-  if (v.sex === sex) {
-    return a.push(v.name);
+const sexTrue = (acumuladorDeAnimais, animal, sex) => {
+  if (animal.sex === sex) {
+    return acumuladorDeAnimais.push(animal.name);
   }
 };
 
-const concatNames = (acu, valor, sex, sort = undefined) => {
+const concatNames = (acumuladorEspecie, especie, sex, sort = undefined) => {
   const temp = {};
-  temp[valor.name] = valor.residents.reduce(((a, v) => {
+  temp[especie.name] = especie.residents.reduce(((acumuladorDeAnimais, animal) => {
     if (sex !== undefined) {
-      condiSex(a, v, sex);
+      sexTrue(acumuladorDeAnimais, animal, sex);
     } else {
-      a.push(v.name);
+      acumuladorDeAnimais.push(animal.name);
     }
-    return a;
+    return acumuladorDeAnimais;
   }), []);
-  if (sort !== undefined) {
-    temp[valor.name].sort();
-  }
-  return acu.push(temp);
+  if (sort !== undefined) temp[especie.name].sort();
+  return acumuladorEspecie.push(temp);
 };
 
-const gerarRegioes = (string) => base(concatGeraRegi, string);
-
-const fififonfon = (string, sex, sort) => base(concatNames, string, sex, sort);
-
-const multiplica4 = (callback, sex, sort) => {
-  callback('NE', sex, sort);
-  callback('NW', sex, sort);
-  callback('SE', sex, sort);
-  callback('SW', sex, sort);
+const base = (string, includeNames = undefined, sex = undefined, sort = undefined) => {
+  superObjeto[string] = especies.reduce(((acumuladorEspecie, especie) => {
+    if (especie.location === string) {
+      if (includeNames === true) {
+        concatNames(acumuladorEspecie, especie, sex, sort);
+      } else {
+        acumuladorEspecie.push(especie.name);
+      }
+    }
+    return acumuladorEspecie;
+  }), []);
 };
 
 function getAnimalMap(options = 0) {
-  if (options === 0) {
-    multiplica4(gerarRegioes);
-    return superObjeto;
-  }
-
-  if (options.includeNames === true) {
-    multiplica4(fififonfon, options.sex, options.sorted);
-    return superObjeto;
-  }
-  multiplica4(gerarRegioes);
+  base('NE', options.includeNames, options.sex, options.sorted);
+  base('NW', options.includeNames, options.sex, options.sorted);
+  base('SE', options.includeNames, options.sex, options.sorted);
+  base('SW', options.includeNames, options.sex, options.sorted);
   return superObjeto;
 }
 
@@ -183,9 +132,8 @@ function getSchedule(parametro = 0) {
   });
   resposta.Monday = 'CLOSED';
 
-  if (parametro !== 0) {
-    return { [parametro]: resposta[parametro] };
-  }
+  if (parametro !== 0) return { [parametro]: resposta[parametro] };
+
   return resposta;
 }
 
