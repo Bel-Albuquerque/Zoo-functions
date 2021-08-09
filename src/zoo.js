@@ -2,7 +2,7 @@ const { prices } = require('./data');
 const data = require('./data');
 
 const especies = data.species;
-const { employees } = data;
+const { employees, hours } = data;
 
 // -----requisito1--------
 
@@ -112,29 +112,20 @@ function getAnimalMap(options = 0) {
 
 // -----requisito10--------
 
-const { hours } = data;
+const { Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, Monday } = hours;
 
-const { Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday } = hours;
+const arrayDestruc = [Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, Monday];
 
-const arrayDestruc = [Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday];
-
-const arrayDiasSemana = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const diasSemana = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday'];
 
 function getSchedule(parametro = 0) {
   const resposta = {};
-  arrayDiasSemana.forEach((valor, index) => {
-    const temp = Object.values(arrayDestruc[index]);
-    if (temp[1] > 12) {
-      const temp2 = temp[1];
-      temp[1] = 12 - (24 - temp2);
-    }
-    resposta[valor] = (`Open from ${temp[0]}am until ${temp[1]}pm`);
+  arrayDestruc.forEach((valor, index) => {
+    const temp = Object.values(valor);
+    if (valor === Monday) resposta[diasSemana[index]] = 'CLOSED';
+    else resposta[diasSemana[index]] = `Open from ${temp[0]}am until ${temp[1] += -12}pm`;
   });
-  resposta.Monday = 'CLOSED';
-
-  if (parametro !== 0) return { [parametro]: resposta[parametro] };
-
-  return resposta;
+  return (parametro !== 0) ? { [parametro]: resposta[parametro] } : resposta;
 }
 
 // -----requisito11--------
