@@ -59,7 +59,7 @@ function countAnimals(par1 = 0) {
   return (par1 !== 0) ? resp[par1] : resp;
 }
 
-// -----requisito8--------
+// -----requisito8-------- (dica da Mariana Fereira)
 
 function calculateEntry({ Adult = 0, Senior = 0, Child = 0 } = 0) {
   return Adult * 49.99 + Senior * 24.99 + Child * 20.99;
@@ -119,12 +119,13 @@ const arrayDestruc = [Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, Mo
 const diasSemana = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday'];
 
 function getSchedule(parametro = 0) {
-  const resposta = {};
-  arrayDestruc.forEach((valor, index) => {
-    const temp = Object.values(valor);
-    if (valor === Monday) resposta[diasSemana[index]] = 'CLOSED';
-    else resposta[diasSemana[index]] = `Open from ${temp[0]}am until ${temp[1] += -12}pm`;
-  });
+  const resposta = diasSemana.reduce(((acu, valor, index) => {
+    const qualquer = acu;
+    const temp = Object.values(arrayDestruc[index]);
+    if (valor === 'Monday') qualquer[valor] = 'CLOSED';
+    else qualquer[valor] = `Open from ${temp[0]}am until ${temp[1] += -12}pm`;
+    return qualquer;
+  }), {});
   return (parametro !== 0) ? { [parametro]: resposta[parametro] } : resposta;
 }
 
@@ -137,9 +138,7 @@ function getOldestFromFirstSpecies(id) {
   const animaisResidentes = objAnimal.residents;
   let resposta = animaisResidentes[0];
   animaisResidentes.forEach((obj) => {
-    if (resposta.age < obj.age) {
-      resposta = obj;
-    }
+    if (resposta.age < obj.age) resposta = obj;
   });
   return Object.values(resposta);
 }
@@ -158,42 +157,34 @@ function increasePrices(valor = 0) {
 
 // -----requisito13--------
 
-const transformarIdemAnimal = (idAnimal) => {
-  let nomeDoAnimal;
-  especies.forEach((obj) => {
-    if (obj.id === idAnimal) {
-      nomeDoAnimal = obj.name;
-    }
-  });
-  return nomeDoAnimal;
-};
-
-const proLintFicarFeliz = (obj) => {
-  const nomeCompleto = `${obj.firstName} ${obj.lastName}`;
-  const arrayAnimais = [];
-  obj.responsibleFor.forEach((idAnimal) => {
-    arrayAnimais.push(transformarIdemAnimal(idAnimal));
-  });
-  const temp = {};
-  temp[nomeCompleto] = arrayAnimais;
-  return temp;
+const proLintFicarFeliz = (acuFun = {}, objFun) => {
+  const qualquer = acuFun;
+  const nome = `${objFun.firstName} ${objFun.lastName}`;
+  const responsFor = objFun.responsibleFor;
+  const arrayAnimais = responsFor.reduce(((acuAnimal, idAnimal) => {
+    const temp = acuAnimal;
+    especies.forEach((valor) => {
+      if (valor.id === idAnimal) temp.push(valor.name);
+    });
+    return temp;
+  }), []);
+  qualquer[nome] = arrayAnimais;
+  return qualquer;
 };
 
 function getEmployeeCoverage(idOrName = 0) {
-  let array = {};
-  if (idOrName === 0) {
-    employees.forEach((obj) => {
-      array = { ...array, ...proLintFicarFeliz(obj) };
-    });
-    return array;
-  }
+  const resposta = employees.reduce(((acuFun, objFun) => proLintFicarFeliz(acuFun, objFun)), {});
+  const respParametro = {};
   employees.forEach((obj) => {
     if (obj.firstName === idOrName || obj.lastName === idOrName || obj.id === idOrName) {
-      array = { ...array, ...proLintFicarFeliz(obj) };
+      const nome = `${obj.firstName} ${obj.lastName}`;
+      respParametro[nome] = resposta[nome];
     }
   });
-  return array;
+  return (idOrName !== 0) ? respParametro : resposta;
 }
+
+console.log(getEmployeeCoverage('Sharonda'));
 
 module.exports = {
   calculateEntry,
