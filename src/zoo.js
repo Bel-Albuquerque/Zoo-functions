@@ -39,13 +39,13 @@ function isManager(id) {
 
 // -----requisito6--------
 
-function addEmployee(id, firstName, lastName, manager = [], responsFor = []) {
+function addEmployee(id, firstName, lastName, managers = [], responsibleFor = []) {
   const obj = {
     id,
     firstName,
     lastName,
-    managers: manager,
-    responsibleFor: responsFor,
+    managers,
+    responsibleFor,
   };
   return employees.push(obj);
 }
@@ -183,8 +183,6 @@ function getEmployeeCoverage(idOrName = 0) {
   });
   return (idOrName !== 0) ? respParametro : resposta;
 }
-
-console.log(getEmployeeCoverage('Sharonda'));
 
 module.exports = {
   calculateEntry,
